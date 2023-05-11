@@ -13,7 +13,9 @@
 |
 */
 
-use App\Http\Controllers\AuthorNewController;
+use App\Models\Author;
+use App\Http\Resources\AuthorResource;
+use App\Http\Controllers\AuthorController;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -21,15 +23,15 @@ $router->get('/', function () use ($router) {
 
 $router->group(["prefix" => "api"], function () use ($router) {
 
-
     //Add an Author
     $router->post('authors', ['uses' => 'AuthorController@create']);
 
     //Show All Authors
     $router->get('authors', ['uses' => 'AuthorController@showAll']);
 
-    //Show Single Author
-    $router->get('authors/{id}', ['uses' => 'AuthorController@showSingleAuthor']);
+    $router->get('authors/{findByid}', function($findByid){
+        return $findByid;
+    });
 
     //Delete Author with ID
     $router->delete('authors/{id}', ['uses' => 'AuthorController@deleteAnAuthor']);

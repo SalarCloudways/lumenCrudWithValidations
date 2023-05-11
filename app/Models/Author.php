@@ -16,6 +16,12 @@ class Author extends Model
         'name', 'email', 'github', 'twitter'
     ];
 
+    public static $rules = [
+        'name' => 'required | max:255',
+        'email' => 'required | email',
+        'authorID' => 'regex:/^[0-9]*$/',
+    ];
+
     /**
      * The attributes excluded from the model's JSON form.
      *

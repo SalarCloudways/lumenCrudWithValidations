@@ -3,44 +3,38 @@
 namespace App\Repositories;
 
 use App\Models\Author;
-use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Http\Resources\AuthorResource;
+use App\Repositories\Interfaces\AuthorRepositoryInterface;
 
 class AuthorRepository implements AuthorRepositoryInterface{
     
     //Add an Author
     public function create($request)
     {
-        $author = Author::create($request->all());
-
-        return response()->json($author, 201);
+        return new AuthorResource(Author::create($request->all()));
     }
 
     //Show All Authors
     public function showAllAuthors(){
-        return response()->json(Author::all());
-    }
-
-    //Show Single Autor
-    public function showSingleAuthor($id){
-        return response()->json(Author::find($id));
+        return AuthorResource::collection(Author::all());
     }
 
     //Delete Author with ID
     public function deleteAnAuthor($id){
 
-        Author::findOrFail($id)->delete();
+        new AuthorResource(Author::findOrFail($id)->delete());
 
-        return response('Deleted Successfully', 200);
+        return response('Deleted Successfully', 201);
     }
 
     //Update an Author
     public function updateAnAuthor($id, $request){
-        
-        $author = Author::findOrFail($id);
+
+        $author = new AuthorResource(Author::findOrFail($id));
         $author->update($request->all());
 
-        return response()->json($author, 200);
+        return $author;
 
     }
 }

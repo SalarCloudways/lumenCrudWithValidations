@@ -12,9 +12,6 @@ Interface AuthorRepositoryInterface{
     //Show All Authors
     public function showAllAuthors();
 
-    //Show Single Autor
-    public function showSingleAuthor($id);
-
     //Delete Author with ID
     public function deleteAnAuthor($id);
 
