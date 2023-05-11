@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Laravel\Lumen\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Validations\AuthorValidation;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 
 class AuthorController extends Controller{
@@ -17,6 +20,7 @@ class AuthorController extends Controller{
 
 
     public function showAll(){
+
         $allAuthors = $this->authorRepository->showAllAuthors();
 
         return response()->json($allAuthors);
@@ -26,36 +30,24 @@ class AuthorController extends Controller{
     public function create(Request $request)
     {
 
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required | email',
-        ]);
+        $validator = Validator::make($request->all(), Author::$rules);
 
-        $author = Author::create($request->all());
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        
+        $author = $this->authorRepository->create($request);
 
         return response()->json($author, 201);
-    }
 
-    //Show Single Autor
-    public function showSingleAuthor(Request $request ,$id){
-        $request['authorID'] = $id; 
-        $this->validate($request, [
-            'authorID' => 'regex:/^[0-9]*$/',
-        ]);
-        return response()->json(Author::find($id));
     }
 
     //Delete Author with ID
     public function deleteAnAuthor(Request $request ,$id){
-        
-        $request['authorID'] = $id; 
-        $this->validate($request, [
-            'authorID' => 'regex:/^[0-9]*$/',
-        ]);
 
-        Author::findOrFail($id)->delete();
+        $author = $this->authorRepository->deleteAnAuthor($id);
 
-        return response('Deleted Successfully', 200);
+        return response($author, 200);
     }
 
     //Update an Author
@@ -63,16 +55,15 @@ class AuthorController extends Controller{
 
         $request['authorID'] = $id; 
 
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required | email',
-            'authorID' => 'regex:/^[0-9]*$/',
-        ]);
-        
-        $author = Author::findOrFail($id);
-        $author->update($request->all());
+        $validator = Validator::make($request->all(), Author::$rules);
 
-        return response()->json($author, 200);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        
+        $author = $this->authorRepository->updateAnAuthor($id, $request);
+
+        return response($author, 200);
 
     }
 
