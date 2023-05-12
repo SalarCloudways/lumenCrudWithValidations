@@ -42,14 +42,6 @@ class AuthorController extends Controller{
 
     }
 
-    //Delete Author with ID
-    public function deleteAnAuthor(Request $request ,$id){
-
-        $author = $this->authorRepository->deleteAnAuthor($id);
-
-        return response($author, 200);
-    }
-
     //Update an Author
     public function updateAnAuthor(Request $request, $id){
 

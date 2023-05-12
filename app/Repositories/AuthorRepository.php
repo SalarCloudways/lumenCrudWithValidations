@@ -20,14 +20,6 @@ class AuthorRepository implements AuthorRepositoryInterface{
         return AuthorResource::collection(Author::all());
     }
 
-    //Delete Author with ID
-    public function deleteAnAuthor($id){
-
-        new AuthorResource(Author::findOrFail($id)->delete());
-
-        return response('Deleted Successfully', 201);
-    }
-
     //Update an Author
     public function updateAnAuthor($id, $request){
 
