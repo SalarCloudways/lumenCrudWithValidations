@@ -29,12 +29,16 @@ $router->group(["prefix" => "api"], function () use ($router) {
     //Show All Authors
     $router->get('authors', ['uses' => 'AuthorController@showAll']);
 
-    $router->get('authors/{findByid}', function($findByid){
-        return $findByid;
+    //Show Single Author
+    $router->get('authors/{author}', function($author){
+        return new AuthorResource($author);
     });
 
     //Delete Author with ID
-    $router->delete('authors/{id}', ['uses' => 'AuthorController@deleteAnAuthor']);
+    $router->delete('authors/{author}', function($author){
+        $author->delete();
+        return response('Deleted Successfully', 201);
+    });
 
     //Update an Author
     $router->put('authors/{id}', ['uses' => 'AuthorController@updateAnAuthor']);
